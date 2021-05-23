@@ -446,8 +446,7 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
                 pm.getBrightnessConstraint(PowerManager.BRIGHTNESS_CONSTRAINT_TYPE_DIM));
 
         // NORMAL SCREEN SETTINGS
-        mScreenBrightnessRangeMinimum =
-                Math.min(screenBrightnessSettingMinimumFloat, mScreenBrightnessDimConfig);
+        mScreenBrightnessRangeMinimum = screenBrightnessSettingMinimumFloat;
         mScreenBrightnessRangeMaximum = clampAbsoluteBrightness(
                 pm.getBrightnessConstraint(PowerManager.BRIGHTNESS_CONSTRAINT_TYPE_MAXIMUM));
         mScreenBrightnessDefault = clampAbsoluteBrightness(
@@ -1055,9 +1054,7 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         // timeout is about to expire.
         if (mPowerRequest.policy == DisplayPowerRequest.POLICY_DIM) {
             if (brightnessState > mScreenBrightnessRangeMinimum) {
-                brightnessState = Math.max(Math.min(brightnessState
-                                - SCREEN_DIM_MINIMUM_REDUCTION_FLOAT,
-                        mScreenBrightnessDimConfig), mScreenBrightnessRangeMinimum);
+                brightnessState = clampScreenBrightness(brightnessState / 2);
                 mBrightnessReasonTemp.addModifier(BrightnessReason.MODIFIER_DIMMED);
             }
             if (!mAppliedDimming) {
